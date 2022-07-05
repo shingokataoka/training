@@ -1,0 +1,47 @@
+services:
+  app:    # サービス名
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    environment:
+      DB_CONNECTION: ${DB_CONNECTION}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: db:3306
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    depends_on:
+      - db
+    volumes:
+      - ./src/:/app
+
+  web:    # サービス名
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - app
+    volumes:
+      - ./src/:/app
+
+  db:    # サービス名
+    build:
+      context: .
+      dockerfile: ./docker/db/Dockerfile
+    ports:
+      # ホスト(vpsやmac)側のポート左側はなくても良い
+      # - 3306:3306
+      - 3306
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - mysql-volume:/var/lib/mysql
+      
+volumes:
+  mysql-volume:
