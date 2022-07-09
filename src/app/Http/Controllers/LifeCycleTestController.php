@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class LifeCycleTestController extends Controller
+{
+    public function showServiceContainerTest()
+    {
+        app()->bind('sample', Sample::class);
+        $sample = app()->make('sample');
+        $sample->run();
+
+        app()->bind('lifeCycleTest', function(){
+            return 'ライフサイクルテスト';
+        });
+
+        $test = app()->make('lifeCycleTest');
+        dd($test, app());
+    }
+}
+
+
+class Sample
+{
+    private $message;
+    public function __construct(Message $message)
+    {
+        $this->message = $message;
+    }
+
+    public function run()
+    {
+        $this->message->send();
+    }
+}
+
+class Message
+{
+    public function send()
+    {
+        echo 'メッセージ';
+    }
+}
+
+
+
