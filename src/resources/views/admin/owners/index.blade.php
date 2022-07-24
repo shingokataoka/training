@@ -55,6 +55,9 @@
                                 @endforeach
                             </tbody>
                           </table>
+
+                            {{ $owners->links() }}
+
                         </div>
 
                       </div>
