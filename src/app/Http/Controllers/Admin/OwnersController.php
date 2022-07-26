@@ -9,6 +9,9 @@ use App\Models\Owner;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use throwable;
+use Illuminate\Support\Facades\Log;
+use App\Models\shop;
 
 class OwnersController extends Controller
 {
@@ -25,7 +28,9 @@ class OwnersController extends Controller
 
     public function index()
     {
-        $owners = Owner::select('id', 'name', 'email', 'created_at')->paginate(3);
+        $owners = Owner::select('id', 'name', 'email', 'created_at')
+            ->orderBy('id')
+            ->paginate(3);
 
         return view('admin.owners.index', compact('owners'));
     }
@@ -54,11 +59,27 @@ class OwnersController extends Controller
             'password' => 'required|string|confirmed|min:8',
         ]);
 
-        Owner::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        try {
+            DB::transaction(function() use ($request) {
+                $owner = Owner::create([
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+
+                Shop::create([
+                    'owner_id' => $owner->id,
+                    'name' => '店名を入力してください',
+                    'information' => '',
+                    'filename' => '',
+                    'is_selling' => true,
+                ]);
+            }, 2);
+        } catch(Throwable $e) {
+            Log::error($e);
+            throw $e;
+        }
+
 
         return redirect()
             ->route('admin.owners.index')
