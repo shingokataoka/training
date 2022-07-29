@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shop;
 use Illuminate\Support\Facades\Storage;
+use InterventionImage;
 
 class ShopController extends Controller
 {
@@ -49,10 +50,23 @@ class ShopController extends Controller
 
         // 画像ファイルがnullでない　かつ　アップロードに成功してるなら
         if ( !is_null($imageFile) && $imageFile->isValid() ) {
+            // ---リサイズなしでの保存---
             // 画像ファイルをpublic/shops/内に保存する
             // Storage::putFileでファイル名を自動生成してから保存
-            // public内shopsフォルダがなければ自動で作ってくれる
-            Storage::putFile('public/shops', $imageFile);
+            // public内shopsフォルダがなければ自動で作ってくれる（第二引数はFileオブジェクトのみ、画像無理）
+            // Storage::putFile('public/shops', $imageFile);
+
+            // ---リサイズありでの保存---
+            // 一意のファイル名を生成
+            $fileName = uniqid(rand(). '_');    // ランダムなユニークIDを生成
+            $extension = $imageFile->extension();   // 画像ファイルの拡張子
+            $fileNameToStore = $fileName . '.' . $extension;
+            // リサイズした画像を生成。resizeの第３引数で縦横比維持
+            $resizedImage = InterventionImage::make($imageFile)->resize(1000, 1080, function ($constraint) {
+                $constraint->aspectRatio();
+            })->encode();
+            // 画像を保存（putはファイルを指定、Fileオブジェクトではない）
+            Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
 
             return redirect()
                 ->route('owner.shops.index');
