@@ -17,7 +17,7 @@
                             </div>
                             <div class="lg:w-1/2 md:w-2/3 mx-auto">
 
-                                <!-- Validation Errors -->
+                            <!-- Validation Errors -->
                              <x-auth-validation-errors class="mb-4" :errors="$errors" />
                             <form action="{{ route('admin.owners.update', ['owner' => $owner->id]) }}" method="post">
                                 @csrf
