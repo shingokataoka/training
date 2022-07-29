@@ -10,7 +10,32 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     @foreach ($shops as $shop)
-                        {{ $shop->name }}
+                    {{-- 広すぎるので1/2幅にする --}}
+                    <div class="w-1/2 p-4">
+                        {{-- クリックでeditへ移動 --}}
+                        <a href="{{ route('owner.shops.edit', ['shop' => $shop->id]) }}">
+                            <div class="border rounded-md p-4">
+                                {{-- 「販売中」か「停止中の枠」 --}}
+                                <div class="mb-4">
+                                    @if ($shop->selling)
+                                        <span class="border p-2 rounded-md bg-blue-400 text-white">販売中</span>
+                                        @else
+                                        <span class="border p-2 rounded-md bg-red-400 text-white">停止中</span>
+                                    @endif
+                                </div>
+                                {{-- ショップ名 --}}
+                                <div class="text-xl">{{ $shop->name }}</div>
+                                {{-- ショップ画像 --}}
+                                <div>
+                                    @if (empty($shop->filename))
+                                        <img src="{{ asset('images/no_image.jpg') }}">
+                                    @else
+                                        <img src="{{ asset('storage/shops.'. $shop->filename) }}">
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                     @endforeach
                 </div>
             </div>
