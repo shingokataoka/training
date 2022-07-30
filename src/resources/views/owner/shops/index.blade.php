@@ -9,6 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    <!-- フラッシュメッセージ -->
+                    <x-flash-message status="session('status')" />
+
                     @foreach ($shops as $shop)
                     {{-- 広すぎるので1/2幅にする --}}
                     <div class="w-1/2 p-4">
@@ -17,7 +20,7 @@
                             <div class="border rounded-md p-4">
                                 {{-- 「販売中」か「停止中の枠」 --}}
                                 <div class="mb-4">
-                                    @if ($shop->selling)
+                                    @if ($shop->is_selling)
                                         <span class="border p-2 rounded-md bg-blue-400 text-white">販売中</span>
                                         @else
                                         <span class="border p-2 rounded-md bg-red-400 text-white">停止中</span>
@@ -25,14 +28,8 @@
                                 </div>
                                 {{-- ショップ名 --}}
                                 <div class="text-xl">{{ $shop->name }}</div>
-                                {{-- ショップ画像 --}}
-                                <div>
-                                    @if (empty($shop->filename))
-                                        <img src="{{ asset('images/no_image.jpg') }}">
-                                    @else
-                                        <img src="{{ asset('storage/shops.'. $shop->filename) }}">
-                                    @endif
-                                </div>
+                                {{-- 店舗サムネイル画像 --}}
+                                <x-shop-thumbnail :filename="$shop->filename" />
                             </div>
                         </a>
                     </div>
