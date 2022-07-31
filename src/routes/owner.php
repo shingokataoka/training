@@ -41,7 +41,7 @@ Route::prefix('shops')
     });
 
 Route::resource('images', ImageController::class)
-    ->middleware('auth::owners')
+    ->middleware('auth:owners')
     ->except('show');
 
 Route::get('/dashboard', function () {
