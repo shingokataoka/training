@@ -18,7 +18,7 @@
                         @csrf
                         <div class="-m-2">
 
-                            {{-- 店名 --}}
+                            {{-- カテゴリ一覧 --}}
                             <div class="p-2 w-1/2  mx-auto">
                                 <select name="category">
                                 @foreach ($categories as $category)
