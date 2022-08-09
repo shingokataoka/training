@@ -38,7 +38,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('image4')
                 ->nullable()
                 ->constrained('images');
-            $table->datetime('create_at')->nullable();
+            $table->datetime('created_at')->nullable();
             $table->datetime('updated_at')->nullable();
         });
     }

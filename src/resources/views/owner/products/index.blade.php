@@ -27,7 +27,7 @@
                             <a href="{{ route('owner.products.edit', ['product' => $product->id]) }}">
                                 <div class="border rounded-md p-2 md:p-4">
                                     {{-- サムネイル画像 --}}
-                                    <x-thumbnail :filename="$product->imageFirst->filename" type="products" />
+                                    <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" type="products" />
                                     {{-- 画像タイトル --}}
                                     {{-- <div class="text-gray-700">{{ $product->name }}</div> --}}
                                 </div>

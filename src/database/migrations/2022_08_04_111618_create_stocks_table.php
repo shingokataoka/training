@@ -20,7 +20,7 @@ class CreateStocksTable extends Migration
                 ->onUpdate('cascade');
             $table->tinyInteger('type');
             $table->integer('quantity');
-            $table->datetime('create_at')->nullable();
+            $table->datetime('created_at')->nullable();
             $table->datetime('updated_at')->nullable();
         });
     }
