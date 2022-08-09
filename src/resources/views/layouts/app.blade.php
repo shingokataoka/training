@@ -20,6 +20,10 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+
+        {{-- micromodal --}}
+        <link rel="stylesheet" href="{{ url('css/micromodal.css') }}">
+        <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
     </head>
 
     <body class="font-sans antialiased">
@@ -53,5 +57,7 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <script src="{{ url('js/body-micromodal.js') }}"></script>
     </body>
 </html>
