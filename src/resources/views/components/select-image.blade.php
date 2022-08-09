@@ -4,8 +4,13 @@
     elseif ($name === 'image3') { $modal = 'modal-3'; }
     elseif ($name === 'image4') { $modal = 'modal-4'; }
     $no = substr($name, 5);
+
+    // 新規登録時のビューからはCurrent系の値がないので以下処理が必要
+    $currentId = $currentId ?? '';
+    $currentImage =(empty($currentImage))? '' : asset('storage/products/' . $currentImage);
 @endphp
 
+{{-- 画像１〜４選択のモーダルウィンドウ --}}
 <div class="modal micromodal-slide" id="{{ $modal }}" aria-hidden="true">
     <div class="modal__overlay z-50" tabindex="-1" data-micromodal-close>
       <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="{{ $modal }}-title">
@@ -40,11 +45,12 @@
     </div>
 </div>
 
+「画像1〜4を選択」ボタンと「選択中サムネイル画像」
 <div class="flex justify-between items-center mb-4 bg-gray-100 p-4">
     <a data-micromodal-trigger="{{ $modal }}" href='javascript:;' class="p-2 bg-gray-200 rounded-md">画像{{ $no }}を選択</a>
     <div class="w-1/4">
-        <img id="{{ $name }}_thumbnail" src="">
-        <input id="{{ $name }}_hidden" type="hidden" name="{{ $name }}" value="">
+        <img id="{{ $name }}_thumbnail" src="{{ $currentImage }}">
+        <input id="{{ $name }}_hidden" type="hidden" name="{{ $name }}" value="{{ $currentId }}">
     </div>
 </div>
 

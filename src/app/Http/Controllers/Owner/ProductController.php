@@ -27,7 +27,7 @@ class ProductController extends Controller
         $this->middleware(function($request, $next) {
             $id = $request->route()->parameter('product');
             if (!is_null($id)) {
-                $productOwnerId = (int)Product::findOrFail('id')->shop->owner->id;
+                $productOwnerId = (int)Product::findOrFail($id)->shop->owner->id;
                 if ($productOwnerId !== Auth::id()) {
                     abort(404);
                 }
@@ -145,7 +145,16 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $quantity = Stock::where('product_id', $id)->sum('quantity');
+
+        $shops = Shop::where('owner_id', Auth::id())->select('id', 'name')->get();
+
+        $images = Image::where('owner_id', Auth::id())->select('id', 'title', 'filename')->orderBy('updated_at', 'desc')->get();
+
+        $categories = PrimaryCategory::with('secondaries')->get();
+
+        return view('owner.products.edit', compact('product', 'quantity', 'shops', 'images', 'categories'));
     }
 
     /**
