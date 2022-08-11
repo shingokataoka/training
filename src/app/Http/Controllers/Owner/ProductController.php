@@ -187,8 +187,8 @@ class ProductController extends Controller
                 $product->save();
 
                 // type=1なら数量プラス、type=2なら数量マイナスにする
-                if ($request->type === '1') { $newQuantity = $request->quantity; }
-                if ($request->type === '2') { $newQuantity = $request->quantity * -1; }
+                if ($request->type === \Constant::PRODUCT_LIST['add']) { $newQuantity = $request->quantity; }
+                if ($request->type === \Constant::PRODUCT_LIST['reduce']) { $newQuantity = $request->quantity * -1; }
 
                 Stock::create([
                     'product_id' => $product->id,

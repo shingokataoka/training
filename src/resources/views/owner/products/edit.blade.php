@@ -68,10 +68,10 @@
                             <div class="p-2 w-1/2  mx-auto">
                                 <div class="relative flex justify-around">
                                     <label class="hover:opacity-60">
-                                        <input type="radio" name="type" value="1" @if (old('type', '1') === '1') { checked } @endif class="mr-2">追加
+                                        <input type="radio" name="type" value="{{ \Constant::PRODUCT_LIST['add'] }}" @if (old('type', \Constant::PRODUCT_LIST['add']) === \Constant::PRODUCT_LIST['add']) { checked } @endif class="mr-2">追加
                                     </label>
                                     <label class="hover:opacity-60">
-                                        <input type="radio" name="type" value="2" @if (old('type') === '2') { checked } @endif class="mr-2">削減
+                                        <input type="radio" name="type" value="{{ \Constant::PRODUCT_LIST['reduce'] }}" @if (old('type') === \Constant::PRODUCT_LIST['reduce']) { checked } @endif class="mr-2">削減
                                     </label>
                                 </div>
                             </div>
