@@ -8,7 +8,6 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- フラッシュメッセージ -->
                     <x-flash-message status="session('status')" />
@@ -29,7 +28,7 @@
                                     {{-- サムネイル画像 --}}
                                     <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" type="products" />
                                     {{-- 画像タイトル --}}
-                                    {{-- <div class="text-gray-700">{{ $product->name }}</div> --}}
+                                    <div class="text-gray-700">{{ $product->name }}</div>
                                 </div>
                             </a>
                         </div>
