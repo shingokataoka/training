@@ -16,10 +16,10 @@ class ImageSeeder extends Seeder
     public function run()
     {
         $images = [];
-        for($i=1; $i<=3; $i++) {
+        for($i=1; $i<=6; $i++) {
             $images[] = [
                 'owner_id' => 1,
-                'filename' => "sample{$i}.jpg",
+                'filename' => "product{$i}.jpg",
                 'title' => null,
             ];
         }
