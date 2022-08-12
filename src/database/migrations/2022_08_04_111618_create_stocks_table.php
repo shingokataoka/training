@@ -17,7 +17,8 @@ class CreateStocksTable extends Migration
             $table->id();
             $table->foreignId('product_id')
                 ->constrained()
-                ->onUpdate('cascade');
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->tinyInteger('type');
             $table->integer('quantity');
             $table->datetime('created_at')->nullable();
