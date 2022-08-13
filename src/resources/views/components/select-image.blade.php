@@ -45,7 +45,7 @@
     </div>
 </div>
 
-「画像1〜4を選択」ボタンと「選択中サムネイル画像」
+{{-- 「画像1〜4を選択」ボタンと「選択中サムネイル画像」 --}}
 <div class="flex justify-between items-center mb-4 bg-gray-100 p-4">
     <a data-micromodal-trigger="{{ $modal }}" href='javascript:;' class="p-2 bg-gray-200 rounded-md">画像{{ $no }}を選択</a>
     <div class="w-1/4">
