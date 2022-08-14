@@ -15,7 +15,7 @@
                         {{-- 広すぎるので1/4幅にする --}}
                         <div class="w-1/3 md:w-1/4 p-2 md:p-4">
                             {{-- クリックでeditへ移動 --}}
-                            <a href="{">
+                            <a href="{{ route('user.items.show', ['item' => $product->id]) }}">
                                 <div class="border rounded-md p-2 md:p-4">
                                     {{-- サムネイル画像 --}}
                                     <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" type="products" />
