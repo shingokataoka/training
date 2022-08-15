@@ -24,6 +24,7 @@
         {{-- micromodal --}}
         <link rel="stylesheet" href="{{ url('css/micromodal.css') }}">
         <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+
     </head>
 
     <body class="font-sans antialiased">
