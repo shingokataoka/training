@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use App\Models\Stock;
 
 class ItemController extends Controller
 {
@@ -19,6 +20,7 @@ class ItemController extends Controller
     {
         // sum(quantity)が1以上のstocksを取得
         // DB::raw(sql文を文字列で直書きできる)がインジェクション攻撃に注意が必要
+        // ->get()　は付けない（productsにサブクエリで内部結合するため）
         $stocks = DB::table('t_stocks')
             ->select(
                 'product_id',
@@ -27,24 +29,33 @@ class ItemController extends Controller
             ->groupBy('product_id')
             ->having('quantity', '>=', 1);
 
-        // やっていること
-        // productsと$stocks(quantity >= 1)をinner join（quantityが0以下は消える）
-        // このproducts + $stocks とshopsをinner join
-        // whereでshopsとproductsのis_selling=trueのみにする
-        // [結果]quantity>=1、shopsとproductsのis_seliing=true のProductsを取得できる
+        // is_selling=trueなshopsを取得。DB::raw()は同様にインジェクションに注意。
+        // productsとinner joinするので、カラム名の重複回避で「shop_id」などにしてる。
+        // ->get()　は付けない（productsにサブクエリで内部結合するため）
+         $shops = DB::table('shops')
+                ->select(
+                    DB::raw('id as shop_id'),
+                    DB::raw('is_selling as shop_is_selling')
+                )
+                ->where('is_selling', true);
 
+        // 数量が1以上、店舗が販売可能、商品も販売可能な $productsを取得
         $products = Product::
-        // productsにstocks($stocksに付けた別名)をinner joinしてる
-        // quantityが1以上 以外のレコードは消える
+            // $stocksをinner joinしてる
+            // quantityが1以上 以外のレコードは消える
             joinSub($stocks, 'stocks', function($join) {
                 $join->on('products.id', '=', 'stocks.product_id');
             })
-            // products + stocksに shopsをinner join
-            ->join('shops', 'products.shop_id', '=', 'shops.id' )
-            // shopsのis_sellingとproductsのis_sellingがtrueのみ
-            ->where('shops.is_selling', true)
+            // $shopsをinner joinしてる
+            // shop_is_selling=true 以外のレコードは消える
+            ->joinSub($shops, 'shops', function($join) {
+                $join->on('products.shop_id', '=', 'shops.shop_id');
+            })
             ->where('products.is_selling', true)
             ->get();
+
+
+
 
         return view('user.index', compact('products'));
     }
@@ -54,7 +65,10 @@ class ItemController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        return view('user.show', compact('product'));
+        $quantity = Stock::where('product_id', $product->id)->sum('quantity');
+        if ($quantity > 9) $quantity = 9;
+
+        return view('user.show', compact('product', 'quantity'));
     }
 
 }
