@@ -59,7 +59,9 @@
                             <h2 class="mb-4 text-sm title-font text-gray-500 tracking-widest">{{ $product->category->name }}</h2>
                             <h1 class="mb-4 text-gray-900 text-3xl title-font font-medium">{{ $product->name }}</h1>
                             <p class="mb-4 leading-relaxed">{{ $product->information }}</p>
-                            <div class="flex justify-around items-center">
+
+                            <form action="{{ route('user.cart.add') }}" method="post" class="flex justify-around items-center">
+                                @csrf
                                 <div>
                                     <span class="title-font font-medium text-2xl text-gray-900">
                                         {{ number_format($product->price) }}
@@ -76,10 +78,12 @@
                                         @endfor
                                         </select>
                                     </div>
-                                  </div>
+                                </div>
 
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <button class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">カートに入れる</button>
-                              </div>
+                            </form>
+
                         </div>
                     </div>
 
