@@ -13,7 +13,6 @@
 
                         <div class="md:w-1/2">
                             {{-- カルーセル画像 --}}
-
                             {{-- swiper css --}}
                             <style>
                                 .swiper {

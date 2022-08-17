@@ -7,9 +7,27 @@ use Illuminate\Http\Request;
 
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class CartController extends Controller
 {
+
+    public function index()
+    {
+        // カート内の商品を取得
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+
+        // トータルの金額を取得
+        $totalPrice = 0;
+        foreach ($products as $product) {
+            $totalPrice += $product->price * $product->pivot->quantity;
+        }
+
+        return view('user/cart', compact('products', 'totalPrice'));
+    }
+
+
     public function add(Request $request)
     {
         // カートに商品があるか確認
@@ -28,7 +46,8 @@ class CartController extends Controller
                 'quantity' => $request->quantity,
             ]);
         }
-dd('てすと');
-        // return redirect()->route('user.cart.index');
+
+        return redirect()->route('user.cart.index');
     }
+
 }
