@@ -14,7 +14,7 @@
                         @foreach ($products as $product)
                             <div class="md:flex md:items-center mb-2">
                                 <div class="w-3/12">
-                                    <x-thumbnail type="products" filename="{{ $product->filename }}" />
+                                    <x-thumbnail type="products" filename="{{ $product->imagefirst->filename }}" />
                                 </div>
                                 <div class="w-4/12 md:ml-2">{{ $product->name }}</div>
                                 <div class="w-3/12 flex justify-around">
@@ -34,7 +34,14 @@
                                 </div>
                             </div>
                         @endforeach
-                        <div>合計金額:{{ number_format($totalPrice) }}</div>
+                        <div class="my-2">
+                            合計金額:{{ number_format($totalPrice) }}
+                            <span class="text-sm text-gray-700">円（税込）</span>
+                        </div>
+                        <div>
+                            <a href="{{ route('user.cart.checkout') }}"
+                            class="text-white bg-gray-400 border-0 py-2 px-6 focus:outline-none hover:bg-gray-500 rounded">購入する</a>
+                        </div>
                     @else
                         <div>カートに商品が入っていません。</div>
                     @endif
