@@ -10,6 +10,7 @@ use App\Models\SecondaryCategory;
 use App\Models\Image;
 use App\Models\Stock;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -65,5 +66,46 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'carts')
             ->withPivot('id', 'quantity');
+    }
+
+    public function scopeAvailableItems($query)
+    {
+        // sum(quantity)が1以上のstocksを取得
+        // DB::raw(sql文を文字列で直書きできる)がインジェクション攻撃に注意が必要
+        // ->get()　は付けない（productsにサブクエリで内部結合するため）
+        $stocks = DB::table('t_stocks')
+            ->select(
+                'product_id',
+                DB::raw('sum(quantity) as quantity'),
+            )
+            ->groupBy('product_id')
+            ->having('quantity', '>=', 1);
+
+        // $queryはProduct::の事と思えば良い。
+
+        return $query->joinSub($stocks, 'stock', function($join){
+            $join->on('products.id', '=', 'stock.product_id');
+        })
+        // shopsとのjoinはshops.is_sellingをwhereで使うため
+        ->join('shops', 'products.shop_id', 'shops.id')
+        // ここ以下のjoinは各テーブルからid以外のカラム取得のため
+        ->join('secondary_categories', 'products.secondary_category_id', '=', 'secondary_categories.id')
+        ->join('images as image1', 'products.image1', '=', 'image1.id')
+        ->join('images as image2', 'products.image2', '=', 'image2.id')
+        ->join('images as image3', 'products.image3', '=', 'image3.id')
+        ->join('images as image4', 'products.image4', '=', 'image4.id')
+        // 使うカラムを指定
+        ->select(
+            'products.id as id',
+            'products.name as name',
+            'products.price as price',
+            'products.sort_order',
+            'products.information',
+            'secondary_categories.name as category',
+            'image1.filename as filename',
+        )
+        // 販売中shop、販売中productのみに絞り込み
+        ->where('shops.is_selling', true)
+        ->where('products.is_selling', true);
     }
 }
