@@ -14,6 +14,14 @@ class ItemController extends Controller
     public function __construct()
     {
         $this->middleware('auth:users');
+
+        $this->middleware(function($request, $next){
+            $id = $request->route()->parameter('item');
+            // 販売可能アイテムに含まれるか取得
+            $exists = Product::availableItems()->where('product_id', $id)->exists();
+            if (!$exists) abort(404);
+            return $next($request);
+        });
     }
 
     public function index()
