@@ -17,7 +17,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->name,
             'information' => $this->faker->realText,
             'price' => $this->faker->numberBetween(10,100000),
-            'is_selling' => $this->faker->numberBetween(1,2),
+            'is_selling' => $this->faker->numberBetween(0,1),
             'sort_order' => $this->faker->randomNumber,
             'shop_id' => $this->faker->numberBetween(1,2),
             'secondary_category_id' => $this->faker->numberbetween(1,9),
@@ -25,6 +25,7 @@ class ProductFactory extends Factory
             'image2' => $this->faker->numberbetween(1,6),
             'image3' => $this->faker->numberbetween(1,6),
             'image4' => $this->faker->numberbetween(1,6),
+            'created_at' => $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 week'),
         ];
     }
 }

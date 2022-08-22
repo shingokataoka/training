@@ -17,18 +17,19 @@ class ItemController extends Controller
 
         $this->middleware(function($request, $next){
             $id = $request->route()->parameter('item');
-            // 販売可能アイテムに含まれるか取得
+            if (!isset($id)) return $next($request);
+            // 販売可能なアイテムに含まれるか取得
             $exists = Product::availableItems()->where('product_id', $id)->exists();
             if (!$exists) abort(404);
             return $next($request);
         });
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::availableItems()->get();
-        // dd($products[0]);
-
+        // dd($request->sort);
+        $products = Product::availableItems()->sortOrder($request->sort)->get();
+ 
         return view('user.index', compact('products'));
     }
 

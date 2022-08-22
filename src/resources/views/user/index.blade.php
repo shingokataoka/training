@@ -1,8 +1,34 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            ホーム
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                商品一覧
+            </h2>
+            <form action="{{ route('user.items.index') }}" method="get" class="flex">
+                <div>
+                    <span class="text-sm">表示順</span><br>
+                    <select id="sort" name="sort" class="mr-4">
+                        @foreach ([
+                            \Constant::SORT_ORDER['recommend'] => 'おすすめ順',
+                            \Constant::SORT_ORDER['higherPrice'] => '価格の高い順',
+                            \Constant::SORT_ORDER['lowerPrice'] => '価格の安い順',
+                            \Constant::SORT_ORDER['later'] => '新しい順',
+                            \Constant::SORT_ORDER['older'] => '古い順',
+                        ] as $sort => $text)
+                            <option
+                                value="{{ $sort }}"
+                                @if ((int)\Request::get('sort') === $sort)
+                                    selected
+                                @endif
+                                >
+                                {{ $text }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>件数</div>
+            </form>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -38,4 +64,10 @@
             </div>
         </div>
     </div>
+    <script>
+        const select = document.getElementById('sort');
+        select.addEventListener('change', function(e){
+            this.form.submit();
+        });
+    </script>
 </x-app-layout>

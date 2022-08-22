@@ -103,9 +103,33 @@ class Product extends Model
             'products.information',
             'secondary_categories.name as category',
             'image1.filename as filename',
+            'products.created_at as created_at',
         )
         // 販売中shop、販売中productのみに絞り込み
         ->where('shops.is_selling', true)
         ->where('products.is_selling', true);
+    }
+
+    public function scopeSortOrder($query, $sortOrder = null)
+    {
+        if (empty($sortOrder)) $sortOrder = \Constant::SORT_ORDER['recommend'];
+        $sortOrder = (int)$sortOrder;
+
+        if ($sortOrder === \Constant::SORT_ORDER['recommend']) {
+            return $query->orderBy('sort_order', 'asc');
+        }
+        if ($sortOrder === \Constant::SORT_ORDER['higherPrice']) {
+            return $query->orderBy('price', 'desc');
+        }
+        if ($sortOrder === \Constant::SORT_ORDER['lowerPrice']) {
+            return $query->orderBy('price', 'asc');
+        }
+        if ($sortOrder === \Constant::SORT_ORDER['later']) {
+            return $query->orderBy('products.created_at', 'desc');
+        }
+        if ($sortOrder === \Constant::SORT_ORDER['older']) {
+            return $query->orderBy('products.created_at', 'asc');
+        }
+
     }
 }
