@@ -113,7 +113,6 @@ class Product extends Model
     public function scopeSortOrder($query, $sortOrder = null)
     {
         if (empty($sortOrder)) $sortOrder = \Constant::SORT_ORDER['recommend'];
-        $sortOrder = (int)$sortOrder;
 
         if ($sortOrder === \Constant::SORT_ORDER['recommend']) {
             return $query->orderBy('sort_order', 'asc');

@@ -17,11 +17,11 @@ class Common
     ];
 
     // 商品一覧の表示順
-    const ORDER_RECOMMEND = 0;  // おすすめ順
-    const ORDER_HIGHER = 1;     // 価格高い順
-    const ORDER_LOWER = 2;      // 価格安い順
-    const ORDER_LATER = 3;      // 作成日新しい順
-    const ORDER_OLDER = 4;      // 作成日古い順
+    const ORDER_RECOMMEND = '0';  // おすすめ順
+    const ORDER_HIGHER = '1';     // 価格高い順
+    const ORDER_LOWER = '2';      // 価格安い順
+    const ORDER_LATER = '3';      // 作成日新しい順
+    const ORDER_OLDER = '4';      // 作成日古い順
 
     const SORT_ORDER = [
         'recommend' => self::ORDER_RECOMMEND,
