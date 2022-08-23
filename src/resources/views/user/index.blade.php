@@ -1,10 +1,42 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                商品一覧
-            </h2>
-            <form action="{{ route('user.items.index') }}" method="get" class="flex">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            商品一覧
+        </h2>
+
+        <form action="{{ route('user.items.index') }}" method="get">
+        <div class="space-y-2 lg:space-y-0 lg:flex justify-around">
+            <div class="lg:flex items-center space-y-2 lg:space-y-0 lg:space-x-2">
+                {{-- カテゴリ --}}
+                <select name="category" class="p-y-2">
+                    <option value="0"
+                        @if (\Request::get('category') === '0')
+                            selected
+                        @endif
+                    >全て</option>
+                    @foreach ($categories as $category)
+                        <optgroup label="{{ $category->name }}">
+                            @foreach ($category->secondaries as $secondary)
+                                <option
+                                    value="{{ $secondary->id }}"
+                                    @if ((int)\Request::get('category') === $secondary->id)
+                                        selected
+                                    @endif
+                                    >
+                                    {{ $secondary->name }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
+                {{-- キーワードと検索ボタン --}}
+                <div class="flex items-center space-x-2">
+                    <input type="text" name="keyword" placeholder="キーワードを入力">
+                    <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">検索する</button>
+                </div>
+            </div>
+            <div class="flex">
+                {{-- 表示順 --}}
                 <div>
                     <span class="text-sm">表示順</span><br>
                     <select id="sort" name="sort" class="mr-4">
@@ -26,25 +58,25 @@
                         @endforeach
                     </select>
                 </div>
+                {{-- 表示件数 --}}
                 <div>
                     <span class="text-sm">表示件数</span><br>
-                    <form action="{{ route('user.items.index') }}" method="get">
-                        <select name="pagination" id="pagination">
-                            @foreach (['20', '50', '100'] as $pagination)
-                                <option
-                                    value="{{$pagination}}"
-                                    @if (\Request::get('pagination') === $pagination)
-                                        selected
-                                    @endif
-                                    >
-                                    {{$pagination}}件
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
+                    <select name="pagination" id="pagination">
+                        @foreach (['20', '50', '100'] as $pagination)
+                            <option
+                                value="{{$pagination}}"
+                                @if (\Request::get('pagination') === $pagination)
+                                    selected
+                                @endif
+                                >
+                                {{$pagination}}件
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
-            </form>
+            </div>
         </div>
+        </form>
     </x-slot>
 
     <div class="py-12">

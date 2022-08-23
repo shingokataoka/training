@@ -110,6 +110,7 @@ class Product extends Model
         ->where('products.is_selling', true);
     }
 
+
     public function scopeSortOrder($query, $sortOrder = null)
     {
         if (empty($sortOrder)) $sortOrder = \Constant::SORT_ORDER['recommend'];
@@ -129,6 +130,12 @@ class Product extends Model
         if ($sortOrder === \Constant::SORT_ORDER['older']) {
             return $query->orderBy('products.created_at', 'asc');
         }
+    }
 
+
+    public function scopeSelectCategory($query, $categoryId)
+    {
+        if ($categoryId === '0' or empty($categoryId)) return $query;
+        return $query->where('products.secondary_category_id', $categoryId);
     }
 }
