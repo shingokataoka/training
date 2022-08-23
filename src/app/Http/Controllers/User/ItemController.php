@@ -31,6 +31,7 @@ class ItemController extends Controller
         // dd($request);
         $products = Product::availableItems()
             ->selectCategory($request->category)
+            ->searchKeyword($request->keyword)
             ->sortOrder($request->sort)
             ->paginate($request->pagination ?? '20');
 

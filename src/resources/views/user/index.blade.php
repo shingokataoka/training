@@ -31,7 +31,7 @@
                 </select>
                 {{-- キーワードと検索ボタン --}}
                 <div class="flex items-center space-x-2">
-                    <input type="text" name="keyword" placeholder="キーワードを入力">
+                    <input type="text" name="keyword" value="{{ \Request::get('keyword') }}" placeholder="キーワードを入力">
                     <button class="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">検索する</button>
                 </div>
             </div>
