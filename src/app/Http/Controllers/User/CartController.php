@@ -9,6 +9,7 @@ use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Stock;
+use App\Services\CartService;
 
 class CartController extends Controller
 {
@@ -66,6 +67,9 @@ class CartController extends Controller
         // カートの商品一覧を取得
         $user = User::findOrFail(Auth::id());
         $products = $user->products;
+
+        // 購入後メール用のカート内商品情報を取得
+        $items = CartService::getItemsInCart($products);
 
         // 在庫が不足ならリダイレクト
         foreach ($products as $product) {
