@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Stock;
 use App\Services\CartService;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendThanksMail;
+use App\Mail\ThanksMail;
 
 class CartController extends Controller
 {
@@ -70,6 +73,11 @@ class CartController extends Controller
 
         // 購入後メール用のカート内商品情報を取得
         $items = CartService::getItemsInCart($products);
+        // 非同期メール送信
+        SendThanksMail::dispatch($items, $user);
+        // Mail::to($user)
+        // ->send(new thanksMail($items, $user));
+        dd('test send mail');
 
         // 在庫が不足ならリダイレクト
         foreach ($products as $product) {

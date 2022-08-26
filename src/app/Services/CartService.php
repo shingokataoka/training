@@ -9,10 +9,10 @@ class CartService
     {
         $items = [];
 
-        $products->load('shop.owner', 'stocks');
+        // $products->load('shop.owner', 'stocks');
         foreach ($products as $product)
         {
-            $items[] = [
+            $item = [
                 // 商品情報（id,名前,価格）を取得
                 'id' => $product->id,
                 'name' => $product->name,
@@ -23,8 +23,8 @@ class CartService
                 // 在庫数
                 'quantity' => $product->pivot->quantity,
             ];
+            $items[] = (object)$item;
         }
-        dd($items);
         return $items;
     }
 
