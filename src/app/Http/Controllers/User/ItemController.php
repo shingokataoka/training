@@ -8,56 +8,50 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use App\Models\Stock;
+use App\Models\PrimaryCategory;
+
+// use Illuminate\Support\Facades\Mail;
+// use App\Mail\TestMail;
+use App\Jobs\SendThanksMail;
 
 class ItemController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:users');
+
+        $this->middleware(function($request, $next){
+            $id = $request->route()->parameter('item');
+            if (!isset($id)) return $next($request);
+            // 販売可能なアイテムに含まれるか取得
+            $exists = Product::availableItems()->where('product_id', $id)->exists();
+            if (!$exists) abort(404);
+            return $next($request);
+        });
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // sum(quantity)が1以上のstocksを取得
-        // DB::raw(sql文を文字列で直書きできる)がインジェクション攻撃に注意が必要
-        // ->get()　は付けない（productsにサブクエリで内部結合するため）
-        $stocks = DB::table('t_stocks')
-            ->select(
-                'product_id',
-                DB::raw('sum(quantity) as quantity'),
-            )
-            ->groupBy('product_id')
-            ->having('quantity', '>=', 1);
+        // 同期で送信
+        // Mail::to('test@example.com')
+        //     ->send(new TestMail());
 
-        // is_selling=trueなshopsを取得。DB::raw()は同様にインジェクションに注意。
-        // productsとinner joinするので、カラム名の重複回避で「shop_id」などにしてる。
-        // ->get()　は付けない（productsにサブクエリで内部結合するため）
-         $shops = DB::table('shops')
-                ->select(
-                    DB::raw('id as shop_id'),
-                    DB::raw('is_selling as shop_is_selling')
-                )
-                ->where('is_selling', true);
+        // 非同期で送信
+        // SendThanksMail::dispatch();
 
-        // 数量が1以上、店舗が販売可能、商品も販売可能な $productsを取得
-        $products = Product::
-            // $stocksをinner joinしてる
-            // quantityが1以上 以外のレコードは消える
-            joinSub($stocks, 'stocks', function($join) {
-                $join->on('products.id', '=', 'stocks.product_id');
-            })
-            // $shopsをinner joinしてる
-            // shop_is_selling=true 以外のレコードは消える
-            ->joinSub($shops, 'shops', function($join) {
-                $join->on('products.shop_id', '=', 'shops.shop_id');
-            })
-            ->where('products.is_selling', true)
-            ->get();
+        // dd($request);
+        $products = Product::availableItems()
+            ->selectCategory($request->category)
+            ->searchKeyword($request->keyword)
+            ->sortOrder($request->sort)
+            ->paginate($request->pagination ?? '20');
 
+        $categories = PrimaryCategory::with('secondaries')->get();
 
-
-
-        return view('user.index', compact('products'));
+        return view('user.index', compact(
+            'products',
+            'categories',
+        ));
     }
 
 

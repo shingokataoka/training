@@ -9,6 +9,13 @@ use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Stock;
+use App\Services\CartService;
+
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendThanksMail;
+use App\Mail\ThanksMail;
+use App\Jobs\SendOrderedMail;
+use App\Mail\OrderedMail;
 
 class CartController extends Controller
 {
@@ -130,6 +137,18 @@ class CartController extends Controller
 
     public function success()
     {
+        ///
+        // 購入後メール用のカート内商品情報を取得
+        $user = User::with('products.shop.owner')->findOrFail(Auth::id());
+        $items = CartService::getItemsInCart($user->products);
+        // 非同期でユーザーへ購入お礼メールを送信
+        SendThanksMail::dispatch($items, $user);
+        // 非同期でオーナーへ購入があったメールを送信
+        foreach ($items as $item) {
+            SendOrderedMail::dispatch($item, $user);
+        }
+        ///
+
         // 決済成功時なので、（ユーザーの）カート内を消す
        Cart::where('user_id', Auth::id())->delete();
 
