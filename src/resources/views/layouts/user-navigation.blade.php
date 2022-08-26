@@ -5,7 +5,7 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <div class="w-32">
+                    <div class="w-40">
                         <a href="{{ route('user.items.index') }}">
                             <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
                         </a>

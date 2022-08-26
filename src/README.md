@@ -54,3 +54,24 @@ php artisan storage:linkでstorageフォルダにリンク後、storage/app/publ
 
 storage/app/public内にshopsフォルダごと移動して保存してください。
 ショップの画像が表示されるようになります。
+
+
+## section7の補足
+
+決済テストとしてstripeを利用しています。
+必要な場合は .env にstripeの情報 STRIPE_PUBLIC_KEY と STRIPE_SECRET_KEY を追記してください。
+
+## section8の補足
+
+メールのテストとしてmailtrapを使用しています。
+必要な場合は .env の以下のmail情報の環境変数をご自身のmailstrapの値にしてください。
+MAIL_MAILER
+MAIL_HOST
+MAIL_PORT
+MAIL_USERNAME
+MAIL_PASSWORD
+MAIL_ENCRYPTION
+
+メール処理には時間がかかるため、キューを使用しています。
+必要な場合は php artisan queue:work か
+php artisan queue:listen でワーカーを立ち上げて動作確認するようにしてください。
