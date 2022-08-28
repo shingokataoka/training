@@ -1,4 +1,5 @@
-FROM php:8.0-fpm
+FROM php:fpm
+# FROM php:8.0-fpm
 
 ENV TZ Asia/Tokyo
 
@@ -10,8 +11,8 @@ RUN apt install -y npm nodejs
 
 # GDライブラリをインストール
 # コメントアウトのは上記でインストール済のやつ
-RUN apt-get update \
-    && apt-get install -y \
+RUN apt update \
+    && apt install -y \
                 # git \
                 # zip \
                 # unzip \
@@ -31,6 +32,9 @@ RUN apt-get update \
 
 COPY ./docker/app/php.ini /usr/local/etc/php/php.ini
 
-COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
+# docker公式のcomposerイメージをマルチステージビルド（必要な部分だけコピーして残りは破棄される）でインストール
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+# バージョン指定でcompsoerをインストールする場合は以下
+# COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
