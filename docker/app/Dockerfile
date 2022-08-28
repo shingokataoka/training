@@ -7,7 +7,20 @@ RUN apt update && \
 	apt install -y git vim unzip libzip-dev libicu-dev libonig-dev && \
 	docker-php-ext-install intl pdo_mysql zip bcmath
 
+# npmとnode.jsをインストール
 RUN apt install -y npm nodejs
+
+# node.jsを推奨版にアップデート（nを使う方法）
+# まずnをインストール
+RUN npm install n -g
+# node.js推奨版をインストール
+RUN n stable
+# 古いnode.jsを削除
+RUN apt purge -y nodejs npm
+RUN exec /bin/bash -l
+
+# npmをアップデートする
+RUN npm update -g npm
 
 # GDライブラリをインストール
 # コメントアウトのは上記でインストール済のやつ
