@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'users',
-        'passwords' => 'users',
+        'guard' => 'hogehoge',
+        'passwords' => 'hgoehoge',
     ],
 
     /*
@@ -40,13 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'users' => [
+        'user' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'user',
         ],
-        'owners' => [
+        'owner' => [
             'driver' => 'session',
-            'provider' => 'owners',
+            'provider' => 'owner',
         ],
         'admin' => [
             'driver' => 'session',
@@ -72,11 +72,11 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'user' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'owners' => [
+        'owner' => [
             'driver' => 'eloquent',
             'model' => App\Models\Owner::class,
         ],
@@ -107,14 +107,14 @@ return [
     */
 
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
+        'user' => [
+            'provider' => 'user',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],
-        'owners' => [
-            'provider' => 'owners',
+        'owner' => [
+            'provider' => 'owner',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
